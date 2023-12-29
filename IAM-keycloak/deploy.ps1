@@ -1,7 +1,7 @@
 
 
-mkdir Configuration/providers
-mkdir Configuration/certs
+mkdir IAM-keycloak/Configuration/providers
+mkdir IAM-keycloak/Configuration/certs
 
 docker cp java-builder:/usr/src/app/target/custom-event-listener.jar $PWD/Configuration/providers
 
