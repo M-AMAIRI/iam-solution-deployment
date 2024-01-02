@@ -37,14 +37,10 @@ public class CustomEventListenerProvider
 
             RealmModel realm = this.model.getRealm(event.getRealmId());
             UserModel user = this.session.users().getUserById(realm,event.getUserId());
-            // sendUserData(user);
         }
         
     }
 
-
-    // log.infof("User %s removed from Realm %s", user.getUsername(), realm.getName());
-    // log.infof("User %s added to Realm %s", user.getUsername(), realm.getName());
 
 
     @Override
@@ -58,47 +54,6 @@ public class CustomEventListenerProvider
             log.info(data);
         }
     }
-
-
-
-    private void LogOperation(AdminEvent adminEvent) {
-        String data =
-                "{\"Resource path\": " + adminEvent.getResourcePath() + "\"," +
-                        "{\"Resource type\": " + adminEvent.getResourcePath() + "\"," +
-                        "\"Operation type\":\"" + adminEvent.getOperationType() + "\"," +
-                        "\"firstName\":\"" + toString(adminEvent) + "\"," +
-                        "}";
-        try {
-            log.info(data);
-            log.info("A new Event ");
-        } catch (Exception e) {
-            log.errorf("Failed to call API: %s", e);
-        }
-    }
-    // 2023-12-27 20:32:59,778 INFO  [com.cevher.keycloak.CustomEventListenerProvider] (executor-thread-16) {"Resource path": users/aba82938-cae6-48ac-97e3-1e925ba01461",{"Resource type": users/aba82938-cae6-48ac-97e3-1e925ba01461","Operation type":"CREATE","firstName":"operationType=CREATE, realmId=4dc086e7-2a75-4c45-b037-ada05ebc9b9d, clientId=f083b6cc-74f3-4483-9128-9673d36a59f5, userId=b09eb50e-aee5-49f7-b6ea-2234da74a220, email=null, getUsername=admin, getFirstName=null, getLastName=null, ipAddress=172.17.0.1, resourcePath=users/aba82938-cae6-48ac-97e3-1e925ba01461",}
-    // 2023-12-27 20:32:59,778 INFO  [com.cevher.keycloak.CustomEventListenerProvider] (executor-thread-16) A new Event
-
-
-
-
-
-    private void sendUserData(UserModel user) {
-        String data =
-                "{\"id\": " + user.getId() + "\"," +
-                        "{\"email\": " + user.getEmail() + "\"," +
-                        "\"userName\":\"" + user.getUsername() + "\"," +
-                        "\"firstName\":\"" + user.getFirstName() + "\"," +
-                        "\"lastName\":\"" + user.getLastName() + "\"," +
-                        "}";
-        try {
-            log.info(data);
-            log.info("A new user has been created and post API");
-        } catch (Exception e) {
-            log.errorf("Failed to call API: %s", e);
-        }
-    }
-// 2023-12-27 20:32:59,778 INFO  [com.cevher.keycloak.CustomEventListenerProvider] (executor-thread-16) {"id": aba82938-cae6-48ac-97e3-1e925ba01461",{"email": null","userName":"dddd","firstName":"mourissa","lastName":"",}
-// 2023-12-27 20:32:59,778 INFO  [com.cevher.keycloak.CustomEventListenerProvider] (executor-thread-16) A new user has been created and post API
 
 
 
