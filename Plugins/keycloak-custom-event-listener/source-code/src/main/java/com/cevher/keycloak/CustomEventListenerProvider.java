@@ -30,8 +30,6 @@ public class CustomEventListenerProvider
     @Override
     public void onEvent(Event event) {
 
-        log.debugf("New %s Event", event.getType());
-        log.debugf("onEvent-> %s", toString(event));
 
         if (EventType.REGISTER.equals(event.getType())) {
 
@@ -39,7 +37,7 @@ public class CustomEventListenerProvider
 
             RealmModel realm = this.model.getRealm(event.getRealmId());
             UserModel user = this.session.users().getUserById(realm,event.getUserId());
-            sendUserData(user);
+            // sendUserData(user);
         }
         
     }
@@ -51,19 +49,13 @@ public class CustomEventListenerProvider
 
     @Override
     public void onEvent(AdminEvent adminEvent, boolean b) {
-        log.debug("onEvent(AdminEvent)");
-        log.debugf("Resource path: %s", adminEvent.getResourcePath());
-        log.debugf("Resource type: %s", adminEvent.getResourceType());
-        log.debugf("Operation type: %s", adminEvent.getOperationType());
-        log.debugf("AdminEvent.toString(): %s", toString(adminEvent));
 
-        LogOperation(adminEvent);
         if (ResourceType.USER.equals(adminEvent.getResourceType())
-                && OperationType.CREATE.equals(adminEvent.getOperationType())) {
+                && ( OperationType.CREATE.equals(adminEvent.getOperationType()) || OperationType.UPDATE.equals(adminEvent.getOperationType()) || OperationType.DELETE.equals(adminEvent.getOperationType()) ) {
             RealmModel realm = this.model.getRealm(adminEvent.getRealmId());
             UserModel user = this.session.users().getUserById(realm,adminEvent.getResourcePath().substring(6));
-
-            sendUserData(user);
+            String data = "Operation type : " + adminEvent.getOperationType() + " , Admin Account First Name : " + user.getUsername() + " , OPERATION ( CREATED/UPDATED/DELETED ) : " + toString(adminEvent);
+            log.info(data);
         }
     }
 
