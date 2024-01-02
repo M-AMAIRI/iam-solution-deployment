@@ -27,6 +27,9 @@ if ($containerId) {
 }
 
 # build java plugin into container 
+
+docker build . -t simplified-mvn-troubleshooting
+
 docker run --name java-builder -it simplified-mvn-troubleshooting sh -c "mvn clean package" 
 
 # copy the generated plugin ton host folder :
