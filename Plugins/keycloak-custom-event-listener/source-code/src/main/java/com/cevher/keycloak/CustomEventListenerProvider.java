@@ -27,6 +27,8 @@ public class CustomEventListenerProvider
         this.model = session.realms();
     }
 
+
+
     @Override
     public void onEvent(Event event) {
 
@@ -43,102 +45,85 @@ public class CustomEventListenerProvider
 
 
 
+
     @Override
     public void onEvent(AdminEvent adminEvent, boolean b) {
 
         if (ResourceType.USER.equals(adminEvent.getResourceType())
-                && ( OperationType.CREATE.equals(adminEvent.getOperationType()) || OperationType.UPDATE.equals(adminEvent.getOperationType()) || OperationType.DELETE.equals(adminEvent.getOperationType()) ) {
+                && ( OperationType.CREATE.equals(adminEvent.getOperationType()) || OperationType.UPDATE.equals(adminEvent.getOperationType()) || OperationType.DELETE.equals(adminEvent.getOperationType()) ) ){
             RealmModel realm = this.model.getRealm(adminEvent.getRealmId());
-            UserModel user = this.session.users().getUserById(realm,adminEvent.getResourcePath().substring(6));
-            String data = "Operation type : " + adminEvent.getOperationType() + " , Admin Account First Name : " + user.getUsername() + " , OPERATION ( CREATED/UPDATED/DELETED ) : " + toString(adminEvent);
-            log.info(data);
+
+            String userId = adminEvent.getResourcePath().substring(adminEvent.getResourcePath().lastIndexOf("/")+1);
+
+            UserModel user = this.session.users().getUserById(realm,userId);
+            
+            UserModel AdminUser = this.session.users().getUserById(realm,adminEvent.getAuthDetails().getUserId());
+            StringBuilder sb = new StringBuilder();
+
+            if (AdminUser != null) {
+
+                if (user != null) {
+                    if ( OperationType.UPDATE.equals(adminEvent.getOperationType()) )
+                    {
+                        sb.append("Registering the user (USER="); 
+                        sb.append(user.getUsername());
+                        sb.append(", ID= ");
+                        sb.append(userId);
+                        sb.append(" ) in REALM= ");
+                        sb.append(realm.getName());
+                        sb.append(" by admin account (USER= ");
+                        sb.append(AdminUser.getUsername());
+                        sb.append(" , ID= ");
+                        sb.append(adminEvent.getAuthDetails().getUserId());
+                        sb.append(") , Operation=");
+                        sb.append(adminEvent.getOperationType());
+
+                    }
+                    if ( OperationType.CREATE.equals(adminEvent.getOperationType()) )
+                    {
+                        sb.append("Updating the user (USER="); 
+                        sb.append(user.getUsername());
+                        sb.append(", ID= ");
+                        sb.append(userId);
+                        sb.append(" ) in REALM= ");
+                        sb.append(realm.getName());
+                        sb.append(" by admin account (USER= ");
+                        sb.append(AdminUser.getUsername());
+                        sb.append(" , ID= ");
+                        sb.append(adminEvent.getAuthDetails().getUserId());
+                        sb.append(") , Operation=");
+                        sb.append(adminEvent.getOperationType());
+                    } 
+                    }
+
+                    if ( OperationType.DELETE.equals(adminEvent.getOperationType()) )
+                    {
+                        sb.append("Deleting the user (ID=");
+                        sb.append(userId);
+                        sb.append(" ) in REALM= ");
+                        sb.append(realm.getName());
+                        sb.append(" by admin account (USER= ");
+                        sb.append(AdminUser.getUsername());
+                        sb.append(" , ID= ");
+                        sb.append(adminEvent.getAuthDetails().getUserId());
+                        sb.append(") , Operation=");
+                        sb.append(adminEvent.getOperationType());   
+                    }
+
+                    log.info(sb.toString());
+  
+            }
+
+       
+
         }
     }
-
 
 
     @Override
     public void close() {}
 
 
-
-
-
-
-    private String toString(Event event) {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("type=");
-        sb.append(event.getType());
-        sb.append(", realmId=");
-        sb.append(event.getRealmId());
-        sb.append(", clientId=");
-        sb.append(event.getClientId());
-        sb.append(", userId=");
-        sb.append(event.getUserId());
-        sb.append(", ipAddress=");
-        sb.append(event.getIpAddress());
-        if (event.getError() != null) {
-            sb.append(", error=");
-            sb.append(event.getError());
-        }
-
-
-        if (event.getDetails() != null) {
-            for (Map.Entry<String, String> e : event.getDetails().entrySet()) {
-                sb.append(", ");
-                sb.append(e.getKey());
-                if (e.getValue() == null || e.getValue().indexOf(' ') == -1) {
-                    sb.append("=");
-                    sb.append(e.getValue());
-                } else {
-                    sb.append("='");
-                    sb.append(e.getValue());
-                    sb.append("'");
-                }
-            }
-        }
-
-        return sb.toString();
-    }
-
-    private String toString(AdminEvent event) {
-
-        RealmModel realm = this.model.getRealm(event.getRealmId());
-
-        UserModel newRegisteredUser =
-                this.session.users().getUserById(realm,event.getAuthDetails().getUserId());
-
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("operationType=");
-        sb.append(event.getOperationType());
-        sb.append(", realmId=");
-        sb.append(event.getAuthDetails().getRealmId());
-        sb.append(", clientId=");
-        sb.append(event.getAuthDetails().getClientId());
-        sb.append(", userId=");
-        sb.append(event.getAuthDetails().getUserId());
-
-        if (newRegisteredUser != null) {
-            sb.append(", email=");
-            sb.append(newRegisteredUser.getEmail());
-            sb.append(", getUsername=");
-            sb.append(newRegisteredUser.getUsername());
-            sb.append(", getFirstName=");
-            sb.append(newRegisteredUser.getFirstName());
-            sb.append(", getLastName=");
-            sb.append(newRegisteredUser.getLastName());
-        }
-        sb.append(", ipAddress=");
-        sb.append(event.getAuthDetails().getIpAddress());
-        sb.append(", resourcePath=");
-        sb.append(event.getResourcePath());
-        if (event.getError() != null) {
-            sb.append(", error=");
-            sb.append(event.getError());
-        }
-
-        return sb.toString();
-    }
 }
+
+
