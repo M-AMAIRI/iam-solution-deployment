@@ -14,4 +14,3 @@ RUN mkdir -p /opt/keycloak/certs
 COPY ./Configuration/certs/* /opt/keycloak/certs
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-
