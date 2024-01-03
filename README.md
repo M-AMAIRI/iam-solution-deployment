@@ -11,7 +11,7 @@ cd iam-solution-deployment
 
 if you want to try keycloak without providers :
 ```sh
-./IAM-keycloak/deploy.ps1
+./IAM-keycloak/deploy-0.ps1
 ```
 
 
