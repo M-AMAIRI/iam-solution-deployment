@@ -36,3 +36,6 @@ if ($containerId) {
 
 
 docker run --name mykeycloak -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -p 8443:8443 iam-keycloak start --optimized
+
+cd ..
+
