@@ -13,7 +13,7 @@ docker build . -t iam-keycloak
 $containerName = "mykeycloak"
 
 # Get the container ID by name (whether running or not)
-$containerId = docker ps -aq -f "name=$containerName"
+$containerId = docker ps -aq -f "name=mykeycloak"
 
 if ($containerId) {
     # Container exists
