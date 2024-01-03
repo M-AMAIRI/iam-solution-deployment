@@ -1,13 +1,11 @@
 
-
 mkdir IAM-keycloak/Configuration/providers
-mkdir IAM-keycloak/Configuration/certs
 
-docker cp java-builder:/usr/src/app/target/custom-event-listener.jar $PWD/Configuration/providers
+docker cp java-builder:/usr/src/app/target/custom-event-listener.jar IAM-keycloak\Configuration\providers
 
+openssl.exe req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout IAM-keycloak/Configuration/certs/keycloak-server.key -out IAM-keycloak/Configuration/certs/keycloak-server.crt
 
-openssl.exe req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout Configuration/certs/keycloak-server.key -out Configuration/certs/keycloak-server.crt
-
+cd IAM-keycloak
 docker build . -t iam-keycloak 
 
 
@@ -38,4 +36,3 @@ if ($containerId) {
 
 
 docker run --name mykeycloak -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -p 8443:8443 iam-keycloak start --optimized
-
