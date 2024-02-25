@@ -9,21 +9,13 @@ git clone https://github.com/M-AMAIRI/iam-solution-deployment.git
 cd iam-solution-deployment
 ```
 
-if you want to try keycloak without providers :
-```sh
-./IAM-keycloak/deploy-0.ps1
-```
 
-
-Build provider by container :
-
-- step 1 :
+- step 1 : Build provider by container .
 ```sh
 ./Plugins/keycloak-custom-event-listener/deploy.ps1
 ```
 
-- step 2 :
-setup and Deploy your custum IAM : 
+- step 2 : setup and Deploy your custum IAM .
 ```sh
 ./IAM-keycloak/deploy.ps1
 ```
